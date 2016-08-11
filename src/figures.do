@@ -54,7 +54,7 @@ label var lt30 "ATUS Commute trip tours";
 label var ATUS "ATUS travel related to work";
 label var ALL "All travel between home and work";
 
-/* Add to Fig 1 line for B&B, as Dave siggested Oct 9 */
+/* Add to Fig 1 line for B&B, as suggested Oct 9 */
 
 twoway (line lt30 minutes, sort), name(lt30, replace) nodraw;
 twoway (line lt30 minutes, sort) (line ALL minutes, sort) (line ATUS minutes, sort), name(allthree, replace) nodraw;
@@ -79,6 +79,7 @@ bysort caseid: keep if _n==1;
 keep caseid female wtperfin;
 save ../data/output/NHTSdemographics, replace;
 
+#delimit;
 use ../data/output/NHTSfinal, clear;
 gen double caseid = houseid*100+personid;
 format %10.0f caseid;
@@ -98,8 +99,8 @@ rename starttime minutes;
 /* Note that those with missing minutes values will be dropped */
 merge m:1 minutes using ../data/output/minutes, nogen keep(2 3);
 
-/* There is one clearly erroneous case, so drop that one */
-drop if caseid==5145731602 & minutes==351;
+/* There is one erroneous (duplicated) case, so drop it */
+drop if caseid==5145731602 & minutes==351 & endtime==358;
 
 /* Format for TS analysis and fill in missing values at every minute */
 tsset caseid minutes , delta(1);
@@ -312,7 +313,7 @@ twoway
 
 graph save ../graphs/fig2_v2, replace;
 
-/* Add analysis that Dave suggested, of departure times across the samples 	*/
+/* Add suggested analysis, of departure times across the samples 	*/
 /* General form:
 
 	by id, sort: egen firsttime = min(cond(state == 1, time, .))
@@ -511,7 +512,7 @@ replace starttime = floor(starttime/30);
 
 gen dataset="ACS";
 
-save ../data/ACSforkernel, replace;
+save ../data/output/ACSforkernel, replace;
 
 append using ../data/output/ATUSforkernel;
 append using ../data/output/NHTSforkernel;

@@ -394,7 +394,7 @@ svy: mean `commutetimes' `nonzeros' `nonzeroboths', subpop(if whitenonhisp==1);
 test commutetimeLT30 = commutetimeATUS;
 test commutetimeLT30 = commutetimeALL;
 
-/* Additional suggestion from Dave Oct 9: histograms of number of commute spells */
+/* Additional suggestion from Oct 9: histograms of number of commute spells */
 use ../data/output/NHTSfinal, clear;
 keep if numcommutespells<=6;
 keep if firstline;
