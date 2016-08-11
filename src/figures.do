@@ -10,10 +10,10 @@ Version 9: Adapting to post-defense code
 set scheme s2mono;
 
 /* Create a set of minutes to merge in so that I'm sure every one is full */
-
+clear;
 set obs 1440;
 gen minutes = _n-1;
-save minutes, replace;
+save ../data/output/minutes, replace;
 
 use ../data/output/ATUSfinal, clear;
 

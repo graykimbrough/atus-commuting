@@ -62,7 +62,7 @@ save ../data/output/2009tours, replace;
 
 clear;
 use ../data/nhts/perv2pub;
-merge 1:m houseid personid using ../data/nhts/2009tours;
+merge 1:m houseid personid using ../data/output/2009tours;
 
 svyset [pweight=wtperfin];
 
