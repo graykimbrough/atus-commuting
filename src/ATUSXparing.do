@@ -26,7 +26,7 @@ Outputs:
  (3) demographics
 */
 
-use atus_prelim, clear;
+use ../data/output/atus_prelim, clear;
 
 tab year;
 sort caseid actline;
@@ -58,7 +58,7 @@ label values weekend labelweekend;
 svyset [pweight=wt06];
 
 /* Save what I have so far, before paring */
-save atusx0312, replace;
+save ../data/output/atusx0312, replace;
 
 /* Cut down to 25-60 */
 keep if age>=25 & age<=60;
@@ -100,10 +100,10 @@ replace starttime = starttime + 24*60 if starttime<0;
 drop time;
 
 sort caseid actline;
-save atusxpared, replace;
+save ../data/output/atusxpared, replace;
 
 keep if actline==1;
 keep caseid female spousepres childpres;
 
 sort caseid;
-save demographics, replace;
+save ../data/output/demographics, replace;

@@ -14,23 +14,20 @@ clear all;
 capture log close;
 set more off;
 
-log using ATUSXmaster.log, replace;
+log using ../log/ATUSXmaster.log, replace;
 
 /* Read in data and produce atus_prelim file in data directory */
-
-cd ../../data/atus/;
-do extract_jgkimbro_uncg_edu36_atus_rvsd.do ;
-cd ../../stata/postdefense;
+do read_atus_extract.do;
 
 /* Pare the data */
-do ATUSXparing_v2.do;
+do ATUSXparing.do;
 
-do construction_newmethod.do;
+do dataset_construction.do;
 
-do commute_comparison_v6.do;
+do commute_comparison.do;
 
-do figures_v9.do;
+do figures.do;
 
-do multivariate.do;
+do multivariate_analysis.do;
 
 capture log close;

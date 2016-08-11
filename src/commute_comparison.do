@@ -3,7 +3,7 @@ set more off;
 clear all;
 
 capture log close;
-log using commute_comparisons, replace;
+log using ../log/commute_comparisons, replace;
 
 **************************************************************************************************;
 /* This program:
@@ -41,7 +41,7 @@ Outputs:
 **************************************************************************************************;
 
 /* First: NHTS */
-use ../../data/nhts/tour09;
+use ../data/nhts/tour09;
 
 tab tourtype;
 sort houseid personid tour;
@@ -64,10 +64,10 @@ list time tot_time travel_time in 1/30;
 keep houseid personid tour tourtype time tot_time travel_time begntime endttime stops;
 
 destring houseid personid, replace;
-save 2009tours, replace;
+save ../data/output/2009tours, replace;
 
 clear;
-use ../../data/nhts/perv2pub;
+use ../data/nhts/perv2pub;
 merge 1:m houseid personid using 2009tours;
 
 svyset [pweight=wtperfin];
@@ -152,13 +152,13 @@ tab oneeachway if firstline ;
 
 svy: prop simple, subpop(firstline);
 
-save NHTSfinal, replace;
+save ../data/output/NHTSfinal, replace;
 
 **************************************************************************************************;
 
 /* Second: ACS  */
 
-use ../../data/acs/usa_00151;
+use ../data/acs/usa_00151;
 
 sum;
 
@@ -177,13 +177,13 @@ svy: mean trantime, subpop(if trantime~=0);
 svy: mean trantime, subpop(if trantime<=120);
 svy: mean trantime, subpop(if trantime~=0 & trantime <=120);
 
-save ACSfinal, replace;
+save ../data/output/ACSfinal, replace;
 
 **************************************************************************************************;
 
 /* Third: ATUS */
 
-use ATUSfinal, clear;
+use ../data/output/ATUSfinal, clear;
 
 /* Table 1: % and # of diary days:
 
@@ -213,7 +213,7 @@ tabstat table1*, stat(sum);
 svy: mean commutetimeLT30 commutetimeDIRECT commutetimeATUS commutetimeALL;
 
 /* Additional analysis: incidence for ACS, NHTS, various ATUS measures */
-use ATUSfinal, clear;
+use ../data/output/ATUSfinal, clear;
 
 foreach type in LT30 DIRECT ATUS ALL{;
   gen nonzero`type'=(commutetime`type'~=0);
@@ -225,7 +225,7 @@ foreach type in LT30 DIRECT ATUS ALL{;
 svy: prop nonzero*, subpop(if firstline);
 /* svy: prop numcommutespells*, subpop(if firstline); */
 
-use NHTSfinal, clear;
+use ../data/output/NHTSfinal, clear;
 svy: mean commutetravtime, subpop(if firstline);
 
 gen nonzerocommute=(commutetravtime~=0);
@@ -236,7 +236,7 @@ gen nonzeroboth=((toworktravtime~=0)&(tohometravtime~=0));
 svy: prop nonzero*, subpop(if firstline);
 svy: prop numcommutespells*, subpop(if firstline);
 
-use ACSfinal, clear;
+use ../data/output/ACSfinal, clear;
 gen nonzerotowork=(trantime~=0);
 svy: prop nonzero*;
 
@@ -245,14 +245,14 @@ svy: prop nonzero*;
 
 /* Table: Descriptive statistics across comparative samples */
 
-use ACSfinal, clear;
+use ../data/output/ACSfinal, clear;
 svy: mean age;
 sum age, det;
 svy: prop sex;
 tab empstat;
 tab empstatd;
 
-use NHTSfinal, clear;
+use ../data/output/NHTSfinal, clear;
 
 tab tdaydate;
 svy: mean r_age;
@@ -261,7 +261,7 @@ svy: prop tdaydate;
 tab worker;
 tab travday;
 
-use ATUSfinal, clear;
+use ../data/output/ATUSfinal, clear;
 
 svy: mean age;
 sum age, det;
@@ -278,36 +278,36 @@ tab empstat;
     2) ATUS
 */
 
-use ACSfinal, clear;
+use ../data/output/ACSfinal, clear;
 svy: mean trantime;
 svy: mean trantime, subpop(if trantime~=0);
 
-use NHTSfinal, clear;
+use ../data/output/NHTSfinal, clear;
 svy: mean toworktravtime, subpop(firstline);
 svy: mean toworktravtime, subpop(if firstline & toworktravtime~=0);
 
-use ATUSfinal, clear;
+use ../data/output/ATUSfinal, clear;
 svy: mean commutetimeLT30towork, subpop(if firstline);
 svy: mean commutetimeLT30towork, subpop(if commutetimeLT30towork~=0 & firstline);
 
-use NHTSfinal, clear;
+use ../data/output/NHTSfinal, clear;
 svy: mean commutetravtime, subpop(if firstline);
 svy: mean commutetravtime, subpop(if firstline & commutetravtime~=0);
 
-use ATUSfinal, clear;
+use ../data/output/ATUSfinal, clear;
 svy: mean commutetimeLT30, subpop(if firstline);
 svy: mean commutetimeLT30, subpop(if commutetimeLT30~=0 & firstline);
 
 
 /* Look at direct commutes only */
-use NHTSfinal, clear;
+use ../data/output/NHTSfinal, clear;
 svy: prop simple, subpop(if firstline);
 svy: prop simple, subpop(if firstline & commutetravtime~=0);
 svy: mean commutetravtime, subpop(if firstline & simple);
 svy: mean commutetravtime, subpop(if firstline & ~simple);
 svy: mean commutetravtime, subpop(if firstline & ~simple & commutetravtime~=0);
 
-use ATUSfinal, clear;
+use ../data/output/ATUSfinal, clear;
 /*svy: prop simple, subpop(if firstline);
 svy: prop simple, subpop(if firstline & commutetimeLT30~=0); 
 svy: mean commutetimeLT30, subpop(if firstline & simple);
@@ -315,11 +315,11 @@ svy: mean commutetimeLT30, subpop(if firstline & ~simple);
 svy: mean commutetimeLT30, subpop(if commutetimeLT30~=0 & ~simple & firstline);
 */
 /* Look at non-direct commutes only */
-use NHTSfinal, clear;
+use ../data/output/NHTSfinal, clear;
 svy: mean commutetravtime, subpop(if firstline & ~simple);
 svy: mean commutetravtime, subpop(if firstline & ~simple & commutetravtime~=0);
 
-use ATUSfinal, clear;
+use ../data/output/ATUSfinal, clear;
 /*svy: mean commutetimeLT30, subpop(if firstline & ~simple);
 svy: mean commutetimeLT30, subpop(if commutetimeLT30~=0 & ~simple & firstline);
 */
@@ -333,7 +333,7 @@ means of the three times
 t-tests of times, pairwise
 */
 
-use ATUSfinal, clear;
+use ../data/output/ATUSfinal, clear;
 keep if firstline;
 
 gen educatt=.;
@@ -401,18 +401,18 @@ test commutetimeLT30 = commutetimeATUS;
 test commutetimeLT30 = commutetimeALL;
 
 /* Additional suggestion from Dave Oct 9: histograms of number of commute spells */
-use NHTSfinal, clear;
+use ../data/output/NHTSfinal, clear;
 keep if numcommutespells<=6;
 keep if firstline;
 hist numcommutespells if firstline , disc frac name(NHTS, replace);
 
-use ATUSfinal, clear;
+use ../data/output/ATUSfinal, clear;
 by caseid: gen LT30count = numtoworkLT30 + numfromworkLT30; 
 keep if firstline;
 keep if LT30count<=6;
 hist LT30count , disc frac name(ATUS, replace);
 graph combine ATUS NHTS, cols(2) ycommon;
 
-graph save histograms, replace;
+graph save ../graphs/histograms, replace;
 
 log close;

@@ -13,7 +13,7 @@ capture log close;
 set more off;
 set scheme s2mono;
 
-log using figures, replace;
+log using ../log/figures, replace;
 
 /* Create a set of minutes to merge in so that I'm sure every one is full */
 
@@ -21,11 +21,11 @@ set obs 1440;
 gen minutes = _n-1;
 save minutes, replace;
 
-use ATUSfinal, clear;
+use ../data/output/ATUSfinal, clear;
 
 keep caseid wt06 female;
 bysort caseid: keep if _n==1;
-save ATUSdemographics, replace;
+save ../data/output/ATUSdemographics, replace;
 
 /* Uncomment to draw 10% sample -- stick to 100% for now. */
 /*
@@ -33,12 +33,12 @@ keep caseid;
 sample 10;
 merge 1:m caseid using ATUSfinal, keep(match);
 */
-use ATUSfinal, clear;
+use ../data/output/ATUSfinal, clear;
 keep caseid starttime commutespellATUS commutespellALL commutespellLT30;
 
 rename starttime minutes;
 
-merge m:1 minutes using minutes, nogen;
+merge m:1 minutes using ../data/output/minutes, nogen;
 
 /* Format for TS analysis and fill in missing values at every minute */
 tsset caseid minutes , delta(1);
@@ -48,9 +48,9 @@ bysort caseid: carryforward commutespellATUS, replace;
 bysort caseid: carryforward commutespellALL, replace;
 bysort caseid: carryforward commutespellLT30, replace;
 
-merge m:1 caseid using ATUSdemographics, nogen;
+merge m:1 caseid using ../data/output/ATUSdemographics, nogen;
 
-save ATUSintermediate, replace;
+save ../data/output/ATUSintermediate, replace;
 
 /* Only want every 15 (or maybe 5, 10, 30?) minutes */
 keep if minutes/15 == floor(minutes/15);
@@ -70,12 +70,12 @@ twoway (line lt30 minutes, sort xlabel(0 240 480 720 960 1200, valuelabel))
 (line ALL minutes, sort xlabel(0 240 480 720 960 1200, valuelabel)), 
   legend(cols(1))
   name(fig1, replace) nodraw;
-graph save fig1, replace;
-save ATUScollapsed, replace;
+graph save ../graphs/fig1, replace;
+save ../data/output/ATUScollapsed, replace;
 
 /* Do the same for NHTS */
 
-use NHTSfinal, clear;
+use ../data/output/NHTSfinal, clear;
 
 gen female=r_sex==2;
 gen double caseid = houseid*100+personid;
@@ -83,9 +83,9 @@ format %10.0f caseid;
 
 bysort caseid: keep if _n==1;
 keep caseid female wtperfin;
-save NHTSdemographics, replace;
+save ../data/output/NHTSdemographics, replace;
 
-use NHTSfinal, clear;
+use ../data/output/NHTSfinal, clear;
 gen double caseid = houseid*100+personid;
 format %10.0f caseid;
 
@@ -102,7 +102,7 @@ replace endtime = endtime + 24*60 if endtime<0;
 rename starttime minutes;
 
 /* Note that those with missing minutes values will be dropped */
-merge m:1 minutes using minutes, nogen keep(2 3);
+merge m:1 minutes using ../data/output/minutes, nogen keep(2 3);
 
 /* There is one clearly erroneous case, so drop that one */
 drop if caseid==5145731602 & minutes==351;
@@ -111,7 +111,7 @@ drop if caseid==5145731602 & minutes==351;
 tsset caseid minutes , delta(1);
 tsfill, full;
 
-save intermediateNHTS, replace;
+save ../data/output/intermediateNHTS, replace;
 
 /* Have to carry endtime forward so that the next step will work */
 bysort caseid: carryforward endtime, replace;
@@ -122,13 +122,13 @@ bysort caseid: replace commutetour=0 if (missing(commutetour) & _n==1);
 
 bysort caseid: carryforward commutetour, replace;
 
-save NHTStimeseries, replace;
+save ../data/output/NHTStimeseries, replace;
 
 /* Only want every 15 (or maybe 5, 10, 30?) minutes */
 keep if minutes/15 == floor(minutes/15);
 
 /* Merge in demographics and weights */
-merge m:1 caseid using NHTSdemographics, nogen keep(3);
+merge m:1 caseid using ../data/output/NHTSdemographics, nogen keep(3);
 
 preserve;
 
@@ -137,19 +137,19 @@ collapse (mean) commute = commutetour [pweight=wtperfin], by(female minutes);
 twoway (line commute minutes if female, sort) 
 	(line commute minutes if ~female, sort), name(NHTSbysex, replace) nodraw;
 
-graph save NHTSbysex, replace;
+graph save ../graphs/NHTSbysex, replace;
 
-save NHTScollapsedbysex, replace;
+save ../data/output/NHTScollapsedbysex, replace;
 
 restore;
 
 collapse (mean) commute = commutetour [pweight=wtperfin], by(minutes);
 twoway (line commute minutes, sort), name(NHTScommutes, replace) nodraw;
-graph save NHTScommutes, replace;
-save NHTScollapsed, replace;
+graph save ../graphs/NHTScommutes, replace;
+save ../data/output/NHTScollapsed, replace;
 
 
-merge 1:1 minutes using ATUScollapsed, nogen;
+merge 1:1 minutes using ../data/output/ATUScollapsed, nogen;
 
 label var minutes "Time of day";
 label define time 0 "4:00 AM" 240 "8:00 AM" 480 "12:00 PM" 720 "4:00 PM" 960 "8:00 PM" 1200 "12:00 AM";
@@ -162,16 +162,16 @@ twoway
  (line commute minutes, sort xlabel(0 240 480 720 960 1200, valuelabel)), 
   name(fig2, replace) nodraw;  
 
-graph save fig2, replace;
+graph save ../graphs/fig2, replace;
 
 /* Version 2 of the figure: to work spells, including ACS */
 
 /* Do same for ATUS and NHTS, but only to-work trips */
-use ATUSfinal, clear;
+use ../data/output/ATUSfinal, clear;
 keep caseid starttime toworkLT30;
 
 rename starttime minutes;
-merge m:1 minutes using minutes, nogen;
+merge m:1 minutes using ../data/output/minutes, nogen;
 
 /* Format for TS analysis and fill in missing values at every minute */
 tsset caseid minutes , delta(1);
@@ -181,7 +181,7 @@ drop if missing(caseid);
 /* 
 replace toworkLT30=0 if missing(toworkLT30) & toworkLT30[_n-1]==0; */
 bysort caseid: carryforward toworkLT30, replace;
-merge m:1 caseid using ATUSdemographics;
+merge m:1 caseid using ../data/output/ATUSdemographics;
 
 keep if _merge==3;
 drop _merge;
@@ -190,10 +190,10 @@ drop _merge;
 keep if minutes/15 == floor(minutes/15);
 
 collapse (mean) toworkATUS = toworkLT30 [pweight=wt06], by(minutes);
-save toworkATUS, replace;
+save ../data/output/toworkATUS, replace;
 
 /* Do the same for NHTS */
-use NHTSfinal, clear;
+use ../data/output/NHTSfinal, clear;
 gen double caseid = houseid*100+personid;
 format %10.0f caseid;
 keep caseid begntime endttime towork;
@@ -209,7 +209,7 @@ replace endtime = endtime + 24*60 if endtime<0;
 rename starttime minutes;
 
 /* Note that those with missing minutes values will be dropped */
-merge m:1 minutes using minutes, nogen keep(2 3);
+merge m:1 minutes using ../data/output/minutes, nogen keep(2 3);
 
 /* There is one clearly erroneous case, so drop that one */
 drop if caseid==5145731602 & minutes==351;
@@ -231,21 +231,21 @@ bysort caseid: carryforward towork, replace;
 keep if minutes/15 == floor(minutes/15);
 
 /* Merge in demographics and weights */
-merge m:1 caseid using NHTSdemographics, nogen keep(3);
+merge m:1 caseid using ../data/output/NHTSdemographics, nogen keep(3);
 
 collapse (mean) toworkNHTS = towork [pweight=wtperfin], by(minutes);
 
-save toworkNHTS, replace;
+save ../data/output/toworkNHTS, replace;
 
 /* Do the same for ACS */
-use ACSfinal, clear;
+use ../data/output/ACSfinal, clear;
 
 gen female=sex==2;
 gen double caseid = serial*100+pernum;
 keep caseid perwt female;
-save ACSdemographics, replace;
+save ../data/output/ACSdemographics, replace;
 
-use ACSfinal, clear;
+use ../data/output/ACSfinal, clear;
 drop if arrives==0000 | departs==0000;
 gen double caseid = serial*100+pernum;
 format %10.0f caseid;
@@ -266,7 +266,7 @@ forval timeval = 15(15)1440{;
 };
 
 /* Merge in demographics and weights */
-merge m:1 caseid using ACSdemographics, nogen keep(3);
+merge m:1 caseid using ../data/output/ACSdemographics, nogen keep(3);
 
 preserve;
 collapse (mean) commute* [pweight=perwt], by(female);
@@ -277,9 +277,9 @@ rename commute toworkACS;
 twoway (line toworkACS minutes if female, sort) 
 	(line toworkACS minutes if ~female, sort), name(ACSbysex, replace) nodraw;
 
-graph save ACSbysex, replace;
+graph save ../graphs/ACSbysex, replace;
 
-save ACScollapsedbysex, replace;
+save ../data/output/ACScollapsedbysex, replace;
 
 restore;
 
@@ -291,11 +291,11 @@ rename commute toworkACS;
 
 twoway (line toworkACS minutes, sort xlabel(0 240 480 720 960 1200, val)), 
 	name(ACScommutes, replace) nodraw;
-graph save ACScommutes, replace;
-save ACScollapsed, replace;
+graph save ../graphs/ACScommutes, replace;
+save ../data/output/ACScollapsed, replace;
 
-merge 1:1 minutes using toworkATUS, nogen;
-merge 1:1 minutes using toworkNHTS, nogen;
+merge 1:1 minutes using ../data/output/toworkATUS, nogen;
+merge 1:1 minutes using ../data/output/toworkNHTS, nogen;
 
 label var minutes "Time of day";
 label define time 0 "4:00 AM" 240 "8:00 AM" 480 "12:00 PM" 720 "4:00 PM" 960 "8:00 PM" 1200 "12:00 AM";
@@ -316,14 +316,14 @@ twoway
 	legend(rows(1)) 
 	xtitle("");
 
-graph save fig2_v2, replace;
+graph save ../graphs/fig2_v2, replace;
 
 /* Add analysis that Dave suggested, of departure times across the samples 	*/
 /* General form:
 
 	by id, sort: egen firsttime = min(cond(state == 1, time, .))
 	keep if time==firsttime													*/
-use ATUSfinal, clear;
+use ../data/output/ATUSfinal, clear;
 keep caseid starttime toworkLT30 wt06;
 bysort caseid: egen firsttime = min(cond(toworkLT30 == 1, starttime, .));
 keep if starttime==firsttime;
@@ -357,10 +357,10 @@ gen depart_cat12 = starttime>=360;
 
 collapse (mean) depart_cat* [pweight=wt06];
 gen dataset="ATUS";
-save ATUS_cats, replace;
+save ../data/output/ATUS_cats, replace;
 
 /* NHTS */
-use NHTSfinal, clear;
+use ../data/output/NHTSfinal, clear;
 gen double caseid = houseid*100+personid;
 keep caseid wtperfin begntime towork;
 
@@ -398,10 +398,10 @@ gen depart_cat12 = begntime>=1000;
 
 collapse (mean) depart_cat* [pweight=wtperfin];
 gen dataset="NHTS";
-save NHTS_cats, replace;
+save ../data/output/NHTS_cats, replace;
 
 /* ACS */
-use ACSfinal, clear;
+use ../data/output/ACSfinal, clear;
 
 drop if arrives==0000 | departs==0000;
 gen double caseid = serial*100+pernum;
@@ -441,8 +441,8 @@ gen depart_cat12 = departs>=1000;
 collapse (mean) depart_cat* [pweight=perwt];
 gen dataset="ACS";
 
-append using ATUS_cats;
-append using NHTS_cats;
+append using ../data/output/ATUS_cats;
+append using ../data/output/NHTS_cats;
 
 label var depart_cat1 "Before 5:00 AM";
 label var depart_cat2 "5:00-5:29 AM";
@@ -464,8 +464,7 @@ foreach cat of varlist depart_cat*{;
 tabstat depart_cat*, by(dataset) stat(mean) format(%4.1f) col(stat);
 
 /* Make departure time graphs */
-#delimit;
-use ATUSfinal, clear;
+use ../data/output/ATUSfinal, clear;
 keep caseid starttime toworkLT30 wt06;
 rename wt06 weight;
 bysort caseid: egen firsttime = min(cond(toworkLT30 == 1, starttime, .));
@@ -477,9 +476,9 @@ gen dataset="ATUS";
 
 replace starttime = floor(starttime/30);
 
-save ATUSforkernel, replace;
+save ../data/output/ATUSforkernel, replace;
 
-use NHTSfinal, clear;
+use ../data/output/NHTSfinal, clear;
 gen double caseid = houseid*100+personid;
 keep caseid wtperfin begntime towork;
 rename wtperfin weight;
@@ -498,9 +497,9 @@ replace starttime = floor(starttime/30);
 
 gen dataset="NHTS";
 
-save NHTSforkernel, replace;
+save ../data/output/NHTSforkernel, replace;
 
-use ACSfinal, clear;
+use ../data/output/ACSfinal, clear;
 
 drop if arrives==0000 | departs==0000;
 gen double caseid = serial*100+pernum;
@@ -520,8 +519,8 @@ gen dataset="ACS";
 
 save ACSforkernel, replace;
 
-append using ATUSforkernel;
-append using NHTSforkernel;
+append using ../data/output/ATUSforkernel;
+append using ../data/output/NHTSforkernel;
 
 gen id=_n;
 gen departure=100;
@@ -538,7 +537,7 @@ tsfill, full;
 
 list in 1/10;
 
-merge m:1 id using weights, nogen;
+merge m:1 id using ../data/output/weights, nogen;
 
 list in 1/10;
 
@@ -570,6 +569,6 @@ twoway
 	xtitle("Time of Day, half hour intervals")
 	ytitle("Percent of Departures to Work");
 
-graph save fig3, replace;
+graph save ../graphs/fig3, replace;
 
 log close;

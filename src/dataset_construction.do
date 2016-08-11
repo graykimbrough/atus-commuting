@@ -24,7 +24,7 @@ Outputs:
  (3) ATUSfinal
 */
 
-use ../data/atusxpared, clear;
+use ../data/output/atusxpared, clear;
 keep if year==2008;
 
 /* Travel spells
@@ -93,7 +93,7 @@ svy: prop beginhome endhome, subpop(firstline);
 
 keep if beginhome & endhome;
 
-save ../data/atusxpared2, replace;
+save ../data/output/atusxpared2, replace;
 
 /* Calculate commutespellATUS */
 
@@ -104,10 +104,10 @@ by caseid: keep if _n==1;
 
 keep caseid commutetimeATUS;
 
-save ../data/commutesATUS, replace;
+save ../data/output/commutesATUS, replace;
 
 /* Reload pared ATUS set to calculate other two measures */
-use ../data/atusxpared2, clear;
+use ../data/output/atusxpared2, clear;
 
 /* Define spells as I'd like, then generate counts of people by number of each.  */
 
@@ -330,7 +330,7 @@ foreach type in LT30 DIRECT ATUS ALL{;
 
 /* Merge back in ATUS TRW information */
 drop commutetimeATUS;
-merge m:1 caseid using ../data/commutesATUS, nogen;
+merge m:1 caseid using ../data/output/commutesATUS, nogen;
 
 sort caseid tournum actline;
 
@@ -351,4 +351,4 @@ replace tourDTH=1 if tourDTH>1 & ~missing(tourDTH);
 by caseid: egen totDTH=total(tourDTH);
 				
 compress;
-save ../data/ATUSfinal, replace;
+save ../data/output/ATUSfinal, replace;

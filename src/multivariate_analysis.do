@@ -10,11 +10,10 @@ clear all;
 capture log close;
 set more off;
 
-log using multivariate, replace;
+log using ../log/multivariate, replace;
 
-#delimit;
 /* Get stats for ACS, too */
-use ACSfinal, clear;
+use ../data/output/ACSfinal, clear;
 svy: prop sex;
 
 /* Education:
@@ -48,7 +47,7 @@ svy: mean whitenonhisp;
 
 /* For NHTS, construct categorical variables */
 /* Female: 1 if female */
-use NHTSfinal, clear;
+use ../data/output/NHTSfinal, clear;
 keep if firstline;
 gen female=(r_sex==2);
 
@@ -84,10 +83,10 @@ sum wtperfin;
 gen weight=wtperfin/r(mean);
 keep commutetime ATUS_ind female educatt agecat whitenonhisp kidspres weight;
 
-save NHTS_for_reg, replace;
+save ../data/output/NHTS_for_reg, replace;
 
 /* Do same for ATUS */
-use ATUSfinal, clear;
+use ../data/output/ATUSfinal, clear;
 keep if firstline;
 
 gen educatt=.;
@@ -114,7 +113,7 @@ gen kidspres = hh_numkids>0 if ~missing(hh_numkids);
 
 rename commutetimeLT30 commutetime;
 keep commutetime ATUS_ind female educatt agecat whitenonhisp kidspres wt06;
-append using NHTS_for_reg;
+append using ../data/output/NHTS_for_reg;
 
 qui sum weight if ATUS_ind==0;
 local num_NHTS=r(N);

@@ -1,6 +1,3 @@
-set more off
-
-clear
 
 clear
 quietly infix                       ///
@@ -16,8 +13,8 @@ quietly infix                       ///
   int     scc_hhnhhown_ln  69-72    ///
   long    scc_nownnhh_ln   73-77    ///
   int     sed_all_ln       78-81    ///
-  using `"extract_jgkimbro_uncg_edu36_atus.dat"' if rectype==3
-save __temp_ipums_hier_3.dta
+  using `"../data/atus/atus_extract.dat"' if rectype==3
+save ../data/output/__temp_ipums_hier_3.dta
 
 clear
 quietly infix                       ///
@@ -98,8 +95,8 @@ quietly infix                       ///
   double  date             253-261  ///
   int     hhtime           262-265  ///
   int     totalhhtime      266-269  ///
-  using `"extract_jgkimbro_uncg_edu36_atus.dat"' if rectype==2
-save __temp_ipums_hier_2.dta
+  using `"../data/atus/atus_extract.dat"' if rectype==2
+save ../data/output/__temp_ipums_hier_2.dta
 
 clear
 quietly infix                       ///
@@ -134,16 +131,16 @@ quietly infix                       ///
   byte    fambus_resp      113-114  ///
   byte    fambus_spouse    115-116  ///
   byte    fambus_other     117-118  ///
-  using `"extract_jgkimbro_uncg_edu36_atus.dat"' if rectype == 1
-save __temp_ipums_hier_1.dta
+  using `"../data/atus/atus_extract.dat"' if rectype == 1
+save ../data/output/__temp_ipums_hier_1.dta
 
 clear
-use __temp_ipums_hier_3.dta
-merge m:1 caseid using __temp_ipums_hier_2.dta, nogen
-merge m:1 caseid using __temp_ipums_hier_1.dta, nogen
-erase __temp_ipums_hier_3.dta
-erase __temp_ipums_hier_2.dta
-erase __temp_ipums_hier_1.dta
+use ../data/output/__temp_ipums_hier_3.dta
+merge m:1 caseid using ../data/output/__temp_ipums_hier_2.dta, nogen
+merge m:1 caseid using ../data/output/__temp_ipums_hier_1.dta, nogen
+erase ../data/output/__temp_ipums_hier_3.dta
+erase ../data/output/__temp_ipums_hier_2.dta
+erase ../data/output/__temp_ipums_hier_1.dta
 
 replace wt06            = wt06            / 1000000
 replace otpay           = otpay           / 100
@@ -3345,4 +3342,4 @@ label values month month_lbl
 label define date_lbl 999999999 `"NIU (Not in universe)"'
 label values date date_lbl
 
-save ../../stata/postdefense/atus_prelim, replace
+save ../data/output/atus_prelim, replace
