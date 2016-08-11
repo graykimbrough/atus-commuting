@@ -1,5 +1,3 @@
-#delimit;
-
 /* Making Figures
 
 Initiated 2/2/2011
@@ -8,12 +6,7 @@ Version 2: Added NHTS figures, switched ATUS data to ATUSfinal
 Version 9: Adapting to post-defense code
 */
 
-clear all;
-capture log close;
-set more off;
 set scheme s2mono;
-
-log using ../log/figures, replace;
 
 /* Create a set of minutes to merge in so that I'm sure every one is full */
 
@@ -570,5 +563,3 @@ twoway
 	ytitle("Percent of Departures to Work");
 
 graph save ../graphs/fig3, replace;
-
-log close;

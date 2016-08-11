@@ -1,16 +1,4 @@
-#delimit;
-
-/* Multivariate analysis
-
-Initiated 6/1/2014
-
-*/
-
-clear all;
-capture log close;
-set more off;
-
-log using ../log/multivariate, replace;
+/* Multivariate analysis  */
 
 /* Get stats for ACS, too */
 use ../data/output/ACSfinal, clear;

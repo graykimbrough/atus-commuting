@@ -1,10 +1,3 @@
-#delimit;
-set more off;
-clear all;
-
-capture log close;
-log using ../log/commute_comparisons, replace;
-
 **************************************************************************************************;
 /* This program:
 
@@ -414,5 +407,3 @@ hist LT30count , disc frac name(ATUS, replace);
 graph combine ATUS NHTS, cols(2) ycommon;
 
 graph save ../graphs/histograms, replace;
-
-log close;
