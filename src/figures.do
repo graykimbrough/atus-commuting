@@ -511,7 +511,7 @@ replace starttime = floor(starttime/30);
 
 gen dataset="ACS";
 
-save ACSforkernel, replace;
+save ../data/ACSforkernel, replace;
 
 append using ../data/output/ATUSforkernel;
 append using ../data/output/NHTSforkernel;
@@ -523,7 +523,7 @@ rename starttime halfhour;
 /* Format for TS analysis and fill in missing values at every minute */
 preserve;
 keep id dataset weight dataset;
-save weights, replace;
+save ../data/output/weights, replace;
 restore;
 keep id halfhour departure;
 tsset id halfhour , delta(1);
