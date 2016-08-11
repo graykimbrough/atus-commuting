@@ -1,3 +1,4 @@
+#delimit;
 /* Construct dataset with ATUS commuting numbers
 
 	New method:

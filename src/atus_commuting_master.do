@@ -16,10 +16,8 @@ log using ../log/ATUSXmaster.log, replace;
 /* Read in data and produce atus_prelim file in data directory */
 /* Switch to carriage return delimiters for this portion, since these
 	files are edited versions of those provided by IPUMS through ATUS-X */
-#delimit cr
-do read_ATUSX_extract.do
-do labels_and_formats.do
-#delimit ;
+do read_ATUSX_extract.do;
+do labels_and_formats.do;
 
 /* Pare the data */
 do ATUSX_paring.do;

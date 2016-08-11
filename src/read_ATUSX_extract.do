@@ -3,8 +3,6 @@
 	Create a rectangular dataset instead of a hierarchical one
 */
 
-#delimit cr
-
 clear
 quietly infix                       ///
   byte    rectype          1-1      ///
