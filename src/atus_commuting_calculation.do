@@ -17,8 +17,8 @@ log using ../log/atus_commuting_calculation.log, replace;
 */
 
 /* Read in data and produce atus_prelim file in data directory */
-do read_ATUSX_full_dataset.do;
-do labels_and_formats_full_dataset.do;
+do read_ATUSX.do;
+do ATUSX_labels_and_formats.do;
 
 /* Pare the data */
 do ATUSX_paring.do;
