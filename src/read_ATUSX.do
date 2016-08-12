@@ -18,7 +18,7 @@ quietly infix                       ///
   int     sed_all_ln       50-53    ///
   str     start            54-61    ///
   str     stop             62-69    ///
-  using `"../data/atus/atus_extract_full.dat"' if rectype==3
+  using `"../data/input/atus_extract_full.dat"' if rectype==3
 save ../data/output/__temp_ipums_hier_3.dta
 
 clear
@@ -100,7 +100,7 @@ quietly infix                       ///
   byte    nonhhchild       244-245  ///
   int     hhtime           246-249  ///
   int     totalhhtime      250-253  ///
-  using `"../data/atus/atus_extract_full.dat"' if rectype==2
+  using `"../data/input/atus_extract_full.dat"' if rectype==2
 save ../data/output/__temp_ipums_hier_2.dta
 
 clear
@@ -136,7 +136,7 @@ quietly infix                       ///
   byte    hh_numadults     95-96    ///
   byte    fambus_spouse    97-98    ///
   byte    fambus_other     99-100   ///
-  using `"../data/atus/atus_extract_full.dat"' if rectype == 1
+  using `"../data/input/atus_extract_full.dat"' if rectype == 1
 save ../data/output/__temp_ipums_hier_1.dta
 
 clear
