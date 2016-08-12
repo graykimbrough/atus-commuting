@@ -9,14 +9,6 @@ Input: atus_prelim, which contains raw activity
 Output: atusxpared, containing observations for workers, 25-60, non-holiday
 	weekdays.
 
-Initiated 4/12/2010
-Revised 1/3/2011: added 2009
-Revised 5/15/2012: Added 2010
-Revised 10/20/2013: Added 2011 and 2012
-
-v2: Changed employment restrictions to reflect suggestion from prelims
-    Removed holiday restriction as well
-
 Inputs:
  (1) atus_prelim
 

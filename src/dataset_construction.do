@@ -25,10 +25,6 @@ Outputs:
 
 use ../data/output/atusxpared, clear;
 
-/* Limiting to 2008 for comparison to other datasets; remove
-	this restriction for broader analysis of ATUS datasets */
-keep if year==2008;
-
 /* Travel spells
 
 Want all 18xxxx spells, EXCEPT:
