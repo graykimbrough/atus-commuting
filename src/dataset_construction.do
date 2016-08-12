@@ -93,19 +93,6 @@ keep if beginhome & endhome;
 
 save ../data/output/atusxpared2, replace;
 
-/* Calculate commutespellATUS */
-
-/* Combine consecutive 180501 spells */
-
-by caseid: egen commutetimeATUS=total(duration*(activity==180501));
-by caseid: keep if _n==1;
-
-keep caseid commutetimeATUS;
-
-save ../data/output/commutesATUS, replace;
-
-/* Reload pared ATUS set to calculate other two measures */
-use ../data/output/atusxpared2, clear;
 
 /* Define spells as I'd like, then generate counts of people by number of each.  */
 
@@ -133,7 +120,6 @@ by caseid: replace keepflag=1 if
 	
 drop if consecutivetravel==1 & keepflag == 0;
 drop consecutivetravel keepflag;
-
 
 /*  Work spells defined as:
 	050101: work, main job
@@ -264,7 +250,9 @@ gen commutespelltime=duration*travspell*
 gen HWcommutespelltime=duration*travspell*(tour_origin=="home" & tour_dest=="work");
 gen WHcommutespelltime=duration*travspell*(tour_origin=="work" & tour_dest=="home");
 
-foreach len of numlist 30 1440{;
+/* This bit of code was created to be flexible and allow for multiple
+	stop length allowances, but here I use only a 30 minute stop threshold */
+foreach len of numlist 30 {;
 	gen commutespelltimemax`len'=commutespelltime*(max_stop_length<=`len');
 	gen HWcommutespelltimemax`len'=HWcommutespelltime*(max_stop_length<=`len');
 	gen WHcommutespelltimemax`len'=WHcommutespelltime*(max_stop_length<=`len');
@@ -287,18 +275,11 @@ foreach len of numlist 30 1440{;
 		numcommutetoursmax`len'>0;
 };
 
-gen commutespellATUS = activity==180501;
-gen commutespellALL = travspell & ((tour_origin=="work" & tour_dest=="home") |
-				(tour_origin=="home" & tour_dest=="work"));
 gen commutespellLT30 = travspell & 
 		(max_stop_length<=30) & 
 		((tour_origin=="work" & tour_dest=="home") |
-				(tour_origin=="home" & tour_dest=="work"));
-gen commutespellDIRECT = travspell & 
-		(max_stop_length<=0) & 
-		((tour_origin=="work" & tour_dest=="home") |
 				(tour_origin=="home" & tour_dest=="work"));				
-				
+
 gen toworkLT30 = travspell & 
 		(max_stop_length<=30) & 
 				(tour_origin=="home" & tour_dest=="work");
@@ -318,35 +299,13 @@ by caseid tournum: replace tourfromworkLT30=0 if _n~=1;
 				
 by caseid: egen numfromworkLT30=total(tourfromworkLT30);	
 
-foreach type in LT30 DIRECT ATUS ALL{;
+foreach type in LT30{;
 	bysort caseid: egen commutetime`type' = total(commutespelltime*commutespell`type');
 	bysort caseid: egen commutetime`type'towork = total(commutespelltime*commutespell`type'*
 		(tour_origin=="home" & tour_dest=="work"));
 	bysort caseid: egen commutetime`type'fromwork = total(commutespelltime*commutespell`type'*
 		(tour_origin=="work" & tour_dest=="home"));
 };
-
-/* Merge back in ATUS TRW information */
-drop commutetimeATUS;
-merge m:1 caseid using ../data/output/commutesATUS, nogen;
-
-sort caseid tournum actline;
-
-/* Add back in some code to count direct trips */
-				
-gen DTW = travspell & 
-		(max_stop_length==0) & 
-				(tour_origin=="home" & tour_dest=="work");
-by caseid tournum: egen tourDTW = total(DTW);
-replace tourDTW=1 if tourDTW>1 & ~missing(tourDTW);
-by caseid: egen totDTW=total(tourDTW);	
-
-gen DTH = travspell & 
-		(max_stop_length==0) & 
-				(tour_origin=="work" & tour_dest=="home");
-by caseid tournum: egen tourDTH = total(DTH);
-replace tourDTH=1 if tourDTH>1 & ~missing(tourDTH);								
-by caseid: egen totDTH=total(tourDTH);
 				
 compress;
 save ../data/output/ATUSfinal, replace;
