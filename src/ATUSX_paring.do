@@ -64,8 +64,8 @@ keep if weekend==0;
 	defined as 050101 or 050102; drop those not working. */
 gen workcheck = (activity==050101 | activity==050102) & where==102;
 
-/* Change this to reflect recommendation from prelims: Keep those who are employed,
-  but don't add more restrictions because these aren't available in other datasets */
+/* Keep those who are employed, but don't add more restrictions because these 
+	aren't available in other datasets */
 keep if empstat==1 | empstat==2;
 
 /* Drop those whose work spell starts or ends the diary day

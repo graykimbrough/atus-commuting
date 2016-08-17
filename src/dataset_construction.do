@@ -21,6 +21,8 @@ Outputs:
  (1) atusxpared2 (intermediate dataset)
  (2) commutesATUS
  (3) ATUSfinal
+ 
+Preferred measure is stored using variable commutetimeLT30.
 */
 
 use ../data/output/atusxpared, clear;
@@ -204,15 +206,6 @@ while r(N){;
 	by caseid tournum: replace tour_dest=tour_dest[_n+1] if ~missing(tour_dest[_n+1]);
 	qui count if missing(tour_dest)&~missing(tour_dest[_n+1]) & caseid[_n+1]==caseid;
 };
-
-
-/* Keep home->work and work->home tours */
-/* Adding back firstline for people with none of these */
-/* keep if (tour_origin=="home" & tour_dest=="work" |
-	tour_origin=="work" & tour_dest=="home" | 
-	(firstline & ~(tour_origin=="home" & tour_dest=="work" |
-	tour_origin=="work" & tour_dest=="home"))); 
-sort caseid tournum; */
 	
 /* Step 3:
 	(3) For each tour, calculate:
