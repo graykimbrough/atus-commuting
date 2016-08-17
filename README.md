@@ -8,7 +8,7 @@ This Stata code uses the trip tour methodology describe in [Kimbrough (2016)](ht
 ATUS data were sourced from [ATUS-X](https://www.atusdata.org/atus/), in the form of hierarchical extracts.  The provided .do files were edited to construct from these hierarchical files a rectangular dataset, with individual and household characteristics attached to each activity line in a respondent's time diary.
 
 ### Supplied as .zip files
-To use provided data files, check each relevant subdirectory of the data directory for a zipped compressed file; unzip these files in the given directories.
+A data file is provided in .zip format in the [data/input](data/input) directory.  To use this file, unzip it in its given directory.
 
 ### Versioning
 Stata data files may be unreadable on Stata versions prior to 13.0.  Contact the author for older versions of these datasets.
