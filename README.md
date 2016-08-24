@@ -10,12 +10,13 @@ The provided [paring file](src/ATUSX_paring.do) reduces the sample in certain wa
 ## Data files
 ATUS data were sourced from [ATUS-X](https://www.atusdata.org/atus/), in the form of hierarchical extracts.  The provided .do files were edited to construct from these hierarchical files a rectangular dataset, with individual and household characteristics attached to each activity line in a respondent's time diary.
 
+### Supplied as .zip files
+A data file is provided in .zip format in the [data/input](data/input) directory.  To use this file, unzip it in its given directory.
+
+### Merging in additional data
 If you wish to incorporate other covariates, the simplest solution is to obtain a person-level rectangular extract in Stata format from [ATUS-X](https://www.atusdata.org/atus/) with the desired characteristics.  These characteristics can be merged using the `caseid` variable, which uniquely identifies households in the ATUS-X data:
 
 >`merge 1:1 caseid using ../data/output/ATUSfinal`
-
-### Supplied as .zip files
-A data file is provided in .zip format in the [data/input](data/input) directory.  To use this file, unzip it in its given directory.
 
 ### Versioning
 Stata data files may be unreadable on Stata versions prior to 13.0.  Contact the author for older versions of these datasets.
