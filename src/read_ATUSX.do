@@ -18,6 +18,8 @@ quietly infix                       ///
   int     sed_all_ln       50-53    ///
   str     start            54-61    ///
   str     stop             62-69    ///
+/* First edit: use if statement instead of reading whole set, then limiting.
+	Also adjust paths to save files */
   using `"../data/input/atus_extract_full.dat"' if rectype==3
 save ../data/output/__temp_ipums_hier_3.dta
 
@@ -100,6 +102,8 @@ quietly infix                       ///
   byte    nonhhchild       244-245  ///
   int     hhtime           246-249  ///
   int     totalhhtime      250-253  ///
+/* As above: use if statement instead of reading whole set, then limiting.
+	Also adjust paths to save files */
   using `"../data/input/atus_extract_full.dat"' if rectype==2
 save ../data/output/__temp_ipums_hier_2.dta
 
@@ -136,8 +140,13 @@ quietly infix                       ///
   byte    hh_numadults     95-96    ///
   byte    fambus_spouse    97-98    ///
   byte    fambus_other     99-100   ///
+/* As above: use if statement instead of reading whole set, then limiting.
+	Also adjust paths to save files */
   using `"../data/input/atus_extract_full.dat"' if rectype == 1
 save ../data/output/__temp_ipums_hier_1.dta
+
+/* Merge instead of appending, to create rectangular instead of hierarchical
+	structure */
 
 clear
 use ../data/output/__temp_ipums_hier_3.dta
@@ -147,5 +156,6 @@ erase ../data/output/__temp_ipums_hier_3.dta
 erase ../data/output/__temp_ipums_hier_2.dta
 erase ../data/output/__temp_ipums_hier_1.dta
 
+/* Save to chosen file and path */
 
 save ../data/output/atus_prelim, replace
