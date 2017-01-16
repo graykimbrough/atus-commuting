@@ -1,3 +1,4 @@
+#delimit;
 /* Lightly edited version of labels and formatting assignments from
 	.do file provided by IPUMS at ATUS-X */
 
@@ -2497,4 +2498,4 @@ label define where_lbl 9998 `"Refused"', add
 label define where_lbl 9999 `"NIU (Not in universe)"', add
 label values where where_lbl
 
-save ../data/output/atus_prelim, replace
+save ../data/output/atus_labeled, replace

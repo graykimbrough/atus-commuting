@@ -1,3 +1,4 @@
+#delimit;
 /* Adapted version of .do file to input data as provided by IPUMS at ATUS-X,
 	with some light edits plus a major change:
 	Create a rectangular dataset instead of a hierarchical one

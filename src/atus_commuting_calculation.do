@@ -26,4 +26,4 @@ do ATUSX_paring.do;
 /* Construct the set of ATUS commutes */
 do dataset_construction.do;
 
-capture log close;
+log close;

@@ -1,8 +1,7 @@
 #delimit;
-
 /* ATUS-X dataset paring file.  
 
-Input: atus_prelim, which contains raw activity
+Input: atus_labeled, which contains raw activity
       records for all ATUS respondents, 2003-2012, from ATUS-X
       extract 36.
 
@@ -10,7 +9,7 @@ Output: atusxpared, containing observations for workers, 25-60, non-holiday
 	weekdays.
 
 Inputs:
- (1) atus_prelim
+ (1) atus_labeled
 
 Outputs:
  (1) atusx0312 (intermediate dataset)
@@ -18,7 +17,7 @@ Outputs:
  (3) demographics
 */
 
-use ../data/output/atus_prelim, clear;
+use ../data/output/atus_labeled, clear;
 
 tab year;
 sort caseid actline;
