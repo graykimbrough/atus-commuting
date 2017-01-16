@@ -16,7 +16,4 @@ A data file is provided in .zip format in the [data/input](data/input) directory
 ### Merging in additional data
 If you wish to incorporate other covariates, the simplest solution is to obtain a person-level rectangular extract in Stata format from [ATUS-X](https://www.atusdata.org/atus/) with the desired characteristics.  These characteristics can be merged using the `caseid` variable, which uniquely identifies households in the ATUS-X data:
 
->`merge 1:1 caseid using ../data/output/ATUSfinal`
-
-### Versioning
-Stata data files may be unreadable on Stata versions prior to 13.0.  Contact the author for older versions of these datasets.
+>`merge 1:1 caseid using ../data/output/atus_commutes`
