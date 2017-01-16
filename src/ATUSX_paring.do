@@ -2,18 +2,18 @@
 /* ATUS-X dataset paring file.  
 
 Input: atus_labeled, which contains raw activity
-      records for all ATUS respondents, 2003-2012, from ATUS-X
-      extract 36.
+      records for all ATUS respondents, from ATUS-X
+      extract.
 
-Output: atusxpared, containing observations for workers, 25-60, non-holiday
+Output: atus_pared, containing observations for workers, 25-60, non-holiday
 	weekdays.
 
 Inputs:
  (1) atus_labeled
 
 Outputs:
- (1) atusx0312 (intermediate dataset)
- (2) atusxpared
+ (1) atus_before_paring (intermediate dataset)
+ (2) atus_pared
  (3) demographics
 */
 
@@ -49,7 +49,7 @@ label values weekend labelweekend;
 svyset [pweight=wt06];
 
 /* Save what I have so far, before paring */
-save ../data/output/atusx0312, replace;
+save ../data/output/atus_before_paring, replace;
 
 /* Cut down to 25-60 */
 keep if age>=25 & age<=60;
@@ -91,7 +91,7 @@ replace starttime = starttime + 24*60 if starttime<0;
 drop time;
 
 sort caseid actline;
-save ../data/output/atusxpared, replace;
+save ../data/output/atus_pared, replace;
 
 keep if actline==1;
 keep caseid female spousepres childpres;

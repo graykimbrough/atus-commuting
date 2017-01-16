@@ -26,4 +26,8 @@ do ATUSX_paring.do;
 /* Construct the set of ATUS commutes */
 do dataset_construction.do;
 
+/* Extract the desired estimates */
+do extract_commuting_time.do
+
+
 log close;

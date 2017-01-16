@@ -1,4 +1,3 @@
-#delimit;
 /* Lightly edited version of labels and formatting assignments from
 	.do file provided by IPUMS at ATUS-X */
 

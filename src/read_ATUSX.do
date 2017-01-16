@@ -1,4 +1,3 @@
-#delimit;
 /* Adapted version of .do file to input data as provided by IPUMS at ATUS-X,
 	with some light edits plus a major change:
 	Create a rectangular dataset instead of a hierarchical one
@@ -20,9 +19,9 @@ quietly infix                       ///
   str     start            54-61    ///
   str     stop             62-69    ///
 /* First edit: use if statement instead of reading whole set, then limiting.
-	Also adjust paths to save files */
+	Also adjust paths to save files */ ///
   using `"../data/input/atus_extract_full.dat"' if rectype==3
-save ../data/output/__temp_ipums_hier_3.dta
+save ../data/output/__temp_ipums_hier_3.dta, replace
 
 clear
 quietly infix                       ///
@@ -104,9 +103,9 @@ quietly infix                       ///
   int     hhtime           246-249  ///
   int     totalhhtime      250-253  ///
 /* As above: use if statement instead of reading whole set, then limiting.
-	Also adjust paths to save files */
+	Also adjust paths to save files */ ///
   using `"../data/input/atus_extract_full.dat"' if rectype==2
-save ../data/output/__temp_ipums_hier_2.dta
+save ../data/output/__temp_ipums_hier_2.dta, replace
 
 clear
 quietly infix                       ///
@@ -142,9 +141,9 @@ quietly infix                       ///
   byte    fambus_spouse    97-98    ///
   byte    fambus_other     99-100   ///
 /* As above: use if statement instead of reading whole set, then limiting.
-	Also adjust paths to save files */
+	Also adjust paths to save files */ ///
   using `"../data/input/atus_extract_full.dat"' if rectype == 1
-save ../data/output/__temp_ipums_hier_1.dta
+save ../data/output/__temp_ipums_hier_1.dta, replace
 
 /* Merge instead of appending, to create rectangular instead of hierarchical
 	structure */

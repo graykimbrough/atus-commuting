@@ -1,7 +1,8 @@
 #delimit;
-/* Construct dataset with ATUS commuting numbers
+/* Construct dataset with ATUS commuting calculations,
+	retaining all activity spells.
 
-	New method:
+	Steps:
 	
 	(1) Set up set of workers
 	(2) Identify home and work location; use as anchors
@@ -15,17 +16,16 @@
 	(5) Sum up commute times by person
 	
 Inputs:
- (1) atusxpared
+ (1) atus_pared
 
 Outputs:
- (1) atusxpared2 (intermediate dataset)
- (2) commutesATUS
- (3) ATUSfinal
+ (1) atus_pared2 (intermediate dataset)
+ (2) atus_final_spells
  
 Preferred measure is stored using variable commutetimeLT30.
 */
 
-use ../data/output/atusxpared, clear;
+use ../data/output/atus_pared, clear;
 
 /* Travel spells
 
@@ -93,7 +93,7 @@ svy: prop beginhome endhome, subpop(firstline);
 
 keep if beginhome & endhome;
 
-save ../data/output/atusxpared2, replace;
+save ../data/output/atus_pared2, replace;
 
 
 /* Define spells as I'd like, then generate counts of people by number of each.  */
@@ -301,4 +301,4 @@ foreach type in LT30{;
 };
 				
 compress;
-save ../data/output/ATUSfinal, replace;
+save ../data/output/atus_final_spells, replace;
