@@ -5,10 +5,12 @@ This Stata code uses the trip tour methodology described in [Kimbrough (2016)](h
 [atus_commuting_calculation.do](src/atus_commuting_calculation.do) calls each of the component programs in order.  
 
 ## Paring
-The provided [paring file](src/ATUSX_paring.do) reduces the sample in certain ways that were needed for the paper but may not be needed for your analysis.  In particular, age and weekday filters may not be desired.
+The provided [paring program](src/ATUSX_paring.do) reduces the sample in certain ways that were needed for the paper but may not be needed for your analysis.  In particular, age and weekday filters may not be desired.
 
 ## Data files
 ATUS data were sourced from [ATUS-X](https://www.atusdata.org/atus/), in the form of hierarchical extracts.  The provided .do files were edited to construct from these hierarchical files a rectangular dataset, with individual and household characteristics attached to each activity line in a respondent's time diary.
+
+Users wishing to use their own ATUS-X input files should place the .dta files in the data/input directory and modify the accompanying .do files from ATUS-X using the guidance in the comments of the [data read-in program](src/read_ATUSX.do).
 
 ### Supplied as .zip files
 A data file is provided in .zip format in the [data/input](data/input) directory.  To use this file, unzip it in its given directory.
