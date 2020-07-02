@@ -1,5 +1,5 @@
 # ATUS-Commuting
-This Stata code uses the trip tour methodology described in [Kimbrough (2016)](https://ideas.repec.org/p/ris/uncgec/2015_002.html) to construct a measure of commuting from ATUS activity-level files.  If you incorporate or adapt this methodology into your analysis, please cite the latest version of this paper.  Currently it is a working paper, and the most recent version can be found at [RePEC](https://ideas.repec.org/p/ris/uncgec/2015_002.html).
+This Stata code uses the trip tour methodology described in ["Measuring Commuting in the American Time Use Survey"](https://doi.org/10.3233/JEM-180459) to construct a measure of commuting from ATUS activity-level files.  If you incorporate or adapt this methodology into your analysis, please cite the latest version of this paper, published in 2019 in the  Journal of Economic and Social Measurement, vol. 44, no. 1, pp. 1-17.  An ungated version of the paper is available at [https://ideas.repec.org/p/pra/mprapa/93239.html](https://ideas.repec.org/p/pra/mprapa/93239.html).
 
 ## Master file
 [atus_commuting_calculation.do](src/atus_commuting_calculation.do) calls each of the component programs in order.  
